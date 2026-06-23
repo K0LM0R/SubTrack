@@ -35,6 +35,71 @@
       "syncLog": [],
       "theme": "dark",
       "currency": "₴"
+    },
+    "guest_015ee49a": {
+      "password": "scrypt:32768:8:1$0jx0B2PHPBBQqKMZ$5d679d96a5bda61556849f3b1839c7e14890b3f9db659b51ddb75b68582c59e3cc811e887e6c1a01cf1ef11f6bcd43948f550f08bea5110b3ea5e02e18bb2aaa",
+      "subscriptions": [
+        {
+          "id": "1782227176708khkk",
+          "name": "Spotify",
+          "price": 9.99,
+          "date": "2026-06-24",
+          "billing": "monthly",
+          "category": "Музика",
+          "currency": "₴",
+          "card": "",
+          "note": "Додано з шаблону"
+        },
+        {
+          "id": "17822271776149kcg",
+          "name": "YouTube Premium",
+          "price": 13.99,
+          "date": "2026-06-24",
+          "billing": "monthly",
+          "category": "Стрімінг",
+          "currency": "₴",
+          "card": "",
+          "note": "Додано з шаблону"
+        },
+        {
+          "id": "1782227178376mk4o",
+          "name": "ChatGPT Plus",
+          "price": 20,
+          "date": "2026-06-24",
+          "billing": "monthly",
+          "category": "ШІ",
+          "currency": "₴",
+          "card": "",
+          "note": "Додано з шаблону"
+        },
+        {
+          "id": "17822271864864jwr",
+          "name": "Claude Pro",
+          "price": 20,
+          "date": "2026-06-24",
+          "billing": "monthly",
+          "category": "ШІ",
+          "currency": "₴",
+          "card": "",
+          "note": "Додано з шаблону"
+        },
+        {
+          "id": "1782227187007h0bg",
+          "name": "Discord Nitro",
+          "price": 4.99,
+          "date": "2026-06-24",
+          "billing": "monthly",
+          "category": "Ігри",
+          "currency": "₴",
+          "card": "",
+          "note": "Додано з шаблону"
+        }
+      ],
+      "cards": [],
+      "connectedServices": {},
+      "syncLog": [],
+      "theme": "dark",
+      "currency": "₴"
     }
   }
 }

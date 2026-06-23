@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/2.47.0/tabler-icons.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono:wght@500;600&display=swap" rel="stylesheet">
     <style>
-        /* ===== СТИЛІ (без змін, ті ж самі) ===== */
+        /* ===== БАЗОВІ СТИЛІ ===== */
         *{box-sizing:border-box;margin:0;padding:0}
         :root{
           --bg:#0D0F14;--surface:#161B26;--surface2:#1E2535;--surface3:#252D3D;
@@ -16,6 +16,7 @@
           --danger:#EF4444;--warn:#F59E0B;
           --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);
           --radius:12px;--radius-sm:8px;--radius-xs:6px;
+          --sidebar-width:220px;
         }
         body{background:var(--bg);color:var(--text);font-family:'Roboto',sans-serif;min-height:100vh}
         input,select,textarea{background:var(--surface2);border:1px solid var(--border2);color:var(--text);border-radius:var(--radius-xs);padding:8px 12px;font-size:14px;outline:none;width:100%}
@@ -24,6 +25,7 @@
         button{cursor:pointer;border:none;font-family:'Roboto',sans-serif;font-size:14px}
         .mono{font-family:'Roboto Mono','Courier New',monospace}
 
+        /* ===== АВТОРИЗАЦІЯ ===== */
         #authContainer {
             position: fixed; inset: 0; z-index: 1000;
             display: flex; align-items: center; justify-content: center;
@@ -63,108 +65,195 @@
 
         #appContainer { display: none; }
 
+        /* ===== ОСНОВНИЙ ДОДАТОК ===== */
         .app{display:flex;flex-direction:column;min-height:100vh}
-        .topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:12px 20px;display:flex;align-items:center;justify-content:space-between}
-        .logo{display:flex;align-items:center;gap:8px;font-size:16px;font-weight:700;letter-spacing:-0.3px}
+        
+        /* ===== TOPBAR ===== */
+        .topbar{
+            background:var(--surface);border-bottom:1px solid var(--border);
+            padding:8px 16px;display:flex;align-items:center;justify-content:space-between;
+            height:52px;flex-shrink:0;
+        }
+        .topbar-left{display:flex;align-items:center;gap:8px}
+        .menu-btn{
+            background:transparent;color:var(--text2);padding:4px 4px;
+            border-radius:var(--radius-xs);display:flex;align-items:center;justify-content:center;
+            font-size:24px;transition:color .15s;
+        }
+        .menu-btn:hover{color:var(--text)}
+        .logo{display:flex;align-items:center;gap:6px;font-size:16px;font-weight:700;letter-spacing:-0.3px}
         .logo-dot{width:22px;height:22px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center}
         .logo-dot i{font-size:12px;color:#fff}
-        .topbar-right{display:flex;align-items:center;gap:8px}
-        .btn-icon{background:var(--surface2);border:1px solid var(--border);color:var(--text2);padding:7px 10px;border-radius:var(--radius-xs);display:flex;align-items:center;gap:6px;transition:background .15s,color .15s}
+        .topbar-right{display:flex;align-items:center;gap:4px}
+        .btn-icon{
+            background:var(--surface2);border:1px solid var(--border);color:var(--text2);
+            padding:6px;border-radius:50%;width:36px;height:36px;
+            display:flex;align-items:center;justify-content:center;
+            transition:background .15s,color .15s;font-size:18px;
+        }
         .btn-icon:hover{background:var(--surface3);color:var(--text)}
         .avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;cursor:pointer}
-        .main{display:flex;flex:1;overflow:hidden}
-        .sidebar{width:200px;background:var(--surface);border-right:1px solid var(--border);padding:16px 12px;display:flex;flex-direction:column;gap:2px;flex-shrink:0}
-        .nav-item{display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:var(--radius-xs);cursor:pointer;font-size:13px;font-weight:500;color:var(--text2);transition:all .15s}
+
+        /* ===== ОСНОВНА ОБЛАСТЬ ===== */
+        .main-wrapper{display:flex;flex:1;overflow:hidden;position:relative}
+
+        /* ===== SIDEBAR (десктоп) ===== */
+        .sidebar{
+            width:var(--sidebar-width);background:var(--surface);border-right:1px solid var(--border);
+            padding:16px 12px;display:flex;flex-direction:column;gap:2px;flex-shrink:0;
+            overflow-y:auto;
+        }
+        .nav-item{
+            display:flex;align-items:center;gap:10px;padding:9px 12px;
+            border-radius:var(--radius-xs);cursor:pointer;font-size:14px;font-weight:500;
+            color:var(--text2);transition:all .15s;white-space:nowrap;
+        }
         .nav-item:hover{background:var(--surface2);color:var(--text)}
         .nav-item.active{background:rgba(124,58,237,.18);color:#A78BFA}
-        .nav-item i{font-size:16px;width:18px;text-align:center}
+        .nav-item i{font-size:18px;width:24px;text-align:center;flex-shrink:0}
         .nav-sep{height:1px;background:var(--border);margin:8px 0}
-        .content{flex:1;overflow-y:auto;padding:24px}
+
+        .content{flex:1;overflow-y:auto;padding:20px 24px}
+
+        /* ===== СТОРІНКИ ===== */
         .page{display:none}.page.active{display:block}
         .section-title{font-size:22px;font-weight:700;margin-bottom:6px;letter-spacing:-0.5px}
         .section-sub{font-size:13px;color:var(--text2);margin-bottom:24px}
-        .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:28px}
-        .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;position:relative;overflow:hidden}
+
+        /* ===== СТАТИСТИКА ===== */
+        .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px;margin-bottom:28px}
+        .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;position:relative;overflow:hidden}
         .stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
         .stat-card.purple::before{background:var(--accent)}
         .stat-card.cyan::before{background:var(--accent2)}
         .stat-card.green::before{background:var(--accent3)}
         .stat-card.red::before{background:var(--danger)}
-        .stat-label{font-size:12px;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px;font-weight:500}
-        .stat-value{font-size:26px;font-weight:700;font-family:'Roboto Mono','Courier New',monospace}
+        .stat-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px;font-weight:500}
+        .stat-value{font-size:24px;font-weight:700;font-family:'Roboto Mono','Courier New',monospace}
         .stat-meta{font-size:12px;color:var(--text3);margin-top:4px}
-        .dial-wrap{display:flex;align-items:center;justify-content:center;padding:16px 0 24px}
-        .dial-container{position:relative;width:180px;height:180px}
-        .dial-container svg{width:180px;height:180px}
+
+        .dial-wrap{display:flex;align-items:center;justify-content:center;padding:10px 0 18px}
+        .dial-container{position:relative;width:150px;height:150px}
+        .dial-container svg{width:150px;height:150px}
         .dial-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
-        .dial-amount{font-size:22px;font-weight:700;font-family:'Roboto Mono','Courier New',monospace;color:var(--text)}
+        .dial-amount{font-size:20px;font-weight:700;font-family:'Roboto Mono','Courier New',monospace;color:var(--text)}
         .dial-label{font-size:11px;color:var(--text3);margin-top:2px}
+        .pie-legend{display:flex;flex-direction:column;gap:6px;flex:1;font-size:13px}
+        .legend-item{display:flex;align-items:center;gap:8px}
+        .legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+        .legend-name{flex:1;color:var(--text2)}
+        .legend-val{font-family:'Roboto Mono','Courier New',monospace;font-weight:500}
+
+        /* ===== ПІДПИСКИ ===== */
         .sub-list{display:flex;flex-direction:column;gap:10px;margin-bottom:20px}
-        .sub-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;display:flex;align-items:center;gap:14px;transition:border-color .15s}
+        .sub-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;display:flex;align-items:center;gap:12px;transition:border-color .15s}
         .sub-card:hover{border-color:var(--border2)}
-        .sub-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;flex-shrink:0;font-family:monospace}
+        .sub-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;flex-shrink:0}
         .sub-info{flex:1;min-width:0}
         .sub-name{font-size:14px;font-weight:700;margin-bottom:2px}
         .sub-meta{font-size:12px;color:var(--text3)}
-        .sub-price{font-size:16px;font-weight:700;font-family:'Roboto Mono','Courier New',monospace;text-align:right;flex-shrink:0}
+        .sub-price{font-size:15px;font-weight:700;font-family:'Roboto Mono','Courier New',monospace;text-align:right;flex-shrink:0}
         .sub-billing{font-size:11px;color:var(--text3);text-align:right;margin-top:2px}
         .sub-actions{display:flex;gap:6px;flex-shrink:0}
-        .btn-sm{padding:5px 8px;border-radius:var(--radius-xs);font-size:13px;display:flex;align-items:center;gap:4px;transition:background .15s}
+        .btn-sm{padding:4px 8px;border-radius:var(--radius-xs);font-size:12px;display:flex;align-items:center;gap:4px;transition:background .15s}
         .btn-del{background:rgba(239,68,68,.1);color:#EF4444;border:1px solid rgba(239,68,68,.2)}
         .btn-del:hover{background:rgba(239,68,68,.2)}
         .btn-edit{background:var(--surface2);color:var(--text2);border:1px solid var(--border)}
         .btn-edit:hover{background:var(--surface3)}
-        .btn-primary{background:var(--accent);color:#fff;border-radius:var(--radius-xs);padding:9px 18px;font-weight:700;transition:opacity .15s}
+
+        .btn-primary{background:var(--accent);color:#fff;border-radius:var(--radius-xs);padding:8px 16px;font-weight:700;transition:opacity .15s}
         .btn-primary:hover{opacity:.85}
-        .btn-outline{background:transparent;color:var(--text2);border:1px solid var(--border2);border-radius:var(--radius-xs);padding:9px 18px;font-weight:500;transition:background .15s}
+        .btn-outline{background:transparent;color:var(--text2);border:1px solid var(--border2);border-radius:var(--radius-xs);padding:8px 16px;font-weight:500;transition:background .15s}
         .btn-outline:hover{background:var(--surface2);color:var(--text)}
+
         .due-soon-badge{background:rgba(245,158,11,.12);color:var(--warn);font-size:11px;padding:2px 7px;border-radius:4px;border:1px solid rgba(245,158,11,.2);font-weight:500}
         .hottest-badge{background:rgba(239,68,68,.12);color:var(--danger);font-size:11px;padding:2px 7px;border-radius:4px;border:1px solid rgba(239,68,68,.2);font-weight:500}
+
         .form-row{margin-bottom:14px}
         .form-label{font-size:13px;color:var(--text2);margin-bottom:6px;display:block;font-weight:500}
         .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
         .form-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px}
         .form-title{font-size:15px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px}
         .form-actions{display:flex;gap:10px;margin-top:18px}
+
         .section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
         .section-h{font-size:15px;font-weight:700}
-        .pie-legend{display:flex;flex-direction:column;gap:8px;flex:1}
-        .legend-item{display:flex;align-items:center;gap:10px;font-size:13px}
-        .legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
-        .legend-name{flex:1;color:var(--text2)}
-        .legend-val{font-family:'Roboto Mono','Courier New',monospace;font-weight:500}
-        .connect-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
-        .connect-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;text-align:center;transition:border-color .15s}
+
+        .connect-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
+        .connect-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px;text-align:center;transition:border-color .15s}
         .connect-card:hover{border-color:var(--border2)}
-        .connect-icon{width:48px;height:48px;border-radius:12px;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:22px}
+        .connect-icon{width:44px;height:44px;border-radius:12px;margin:0 auto 8px;display:flex;align-items:center;justify-content:center;font-size:20px}
         .connect-name{font-size:14px;font-weight:700;margin-bottom:4px}
-        .connect-desc{font-size:12px;color:var(--text3);margin-bottom:12px}
-        .connect-btn{width:100%;padding:7px;border-radius:var(--radius-xs);font-size:13px;font-weight:500;transition:all .15s}
+        .connect-desc{font-size:12px;color:var(--text3);margin-bottom:10px}
+        .connect-btn{width:100%;padding:6px;border-radius:var(--radius-xs);font-size:13px;font-weight:500;transition:all .15s}
         .connected{background:rgba(16,185,129,.12);color:var(--accent3);border:1px solid rgba(16,185,129,.25)}
         .not-connected{background:var(--surface2);color:var(--text2);border:1px solid var(--border)}
         .not-connected:hover{background:var(--surface3);color:var(--text)}
+
         .profile-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px}
-        .avatar-lg{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;margin:0 auto 12px;color:white;}
+        .avatar-lg{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;margin:0 auto 12px;color:white}
         .theme-options{display:flex;gap:10px;margin-top:10px}
         .theme-opt{width:40px;height:40px;border-radius:8px;border:2px solid transparent;cursor:pointer;transition:border-color .15s}
         .theme-opt:hover,.theme-opt.selected{border-color:var(--accent)}
-        .card-row{display:flex;gap:10px;align-items:center;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-xs);padding:10px 14px;margin-bottom:8px}
+
+        .card-row{display:flex;gap:10px;align-items:center;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-xs);padding:8px 12px;margin-bottom:8px}
         .card-chip{background:var(--surface3);padding:4px 8px;border-radius:4px;font-size:11px;color:var(--text3);font-family:'Roboto Mono',monospace;font-weight:500}
+
         .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:100;display:none}
         .modal-backdrop.open{display:flex}
         .modal{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius);padding:24px;width:420px;max-width:90vw}
         .modal-title{font-size:17px;font-weight:700;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between}
         .close-btn{background:var(--surface2);border:1px solid var(--border);color:var(--text2);padding:4px 8px;border-radius:var(--radius-xs);cursor:pointer;font-size:14px}
-        .sync-toast{position:fixed;bottom:20px;right:20px;background:var(--surface3);border:1px solid var(--border2);border-radius:var(--radius-xs);padding:10px 16px;font-size:13px;z-index:200;display:none;align-items:center;gap:8px;color:var(--accent3);font-weight:500}
+
+        .sync-toast{position:fixed;bottom:20px;right:20px;background:var(--surface3);border:1px solid var(--border2);border-radius:var(--radius-xs);padding:8px 16px;font-size:13px;z-index:200;display:none;align-items:center;gap:8px;color:var(--accent3);font-weight:500}
         .sync-toast.show{display:flex}
-        .empty-state{text-align:center;padding:48px 20px;color:var(--text3)}
+        .empty-state{text-align:center;padding:40px 16px;color:var(--text3)}
         .empty-state i{font-size:40px;margin-bottom:12px;opacity:.4}
         .tag{display:inline-flex;align-items:center;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:500}
         .tag-month{background:rgba(124,58,237,.15);color:#A78BFA}
         .tag-year{background:rgba(6,182,212,.15);color:#67E8F9}
-        @media(max-width:600px){
-        .sidebar{width:52px}.nav-item span{display:none}.nav-item i{width:auto}
-        .stats-grid{grid-template-columns:1fr 1fr}.form-grid{grid-template-columns:1fr}
+
+        /* ===== МОБІЛЬНІ АДАПТАЦІЇ ===== */
+        @media(max-width:768px){
+            .main-wrapper{position:relative}
+            /* Схований сайдбар за замовчуванням (висувний) */
+            .sidebar{
+                position:fixed;top:52px;left:0;bottom:0;
+                width:260px;transform:translateX(-100%);
+                transition:transform 0.25s cubic-bezier(0.4,0,0.2,1);
+                z-index:50;border-right:1px solid var(--border2);
+                box-shadow: 4px 0 20px rgba(0,0,0,0.5);
+                padding:16px 12px;overflow-y:auto;
+            }
+            .sidebar.open{transform:translateX(0)}
+            /* Затемнення фону */
+            .drawer-overlay{
+                position:fixed;inset:0;z-index:40;background:rgba(0,0,0,0.5);
+                display:none;top:52px;
+            }
+            .drawer-overlay.active{display:block}
+            .content{padding:16px}
+            .stats-grid{grid-template-columns:1fr 1fr}
+            .form-grid{grid-template-columns:1fr}
+            .topbar{padding:8px 12px;height:48px}
+            .logo{font-size:14px;gap:4px}
+            .logo-dot{width:20px;height:20px}
+            .logo-dot i{font-size:10px}
+            .btn-icon{width:32px;height:32px;font-size:16px}
+            .avatar{width:28px;height:28px;font-size:11px}
+            .offline-badge{font-size:10px;padding:1px 8px;margin-left:4px}
+            .section-title{font-size:20px}
+            .stat-value{font-size:20px}
+            .dial-container{width:130px;height:130px}
+            .dial-container svg{width:130px;height:130px}
+            .dial-amount{font-size:18px}
+            .connect-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}
+        }
+        @media(max-width:480px){
+            .stats-grid{grid-template-columns:1fr 1fr}
+            .content{padding:12px}
+            .sub-card{flex-wrap:wrap;gap:8px}
+            .sub-actions{margin-left:auto}
         }
     </style>
 </head>
@@ -198,180 +287,205 @@
 <div id="appContainer">
 <div class="app">
 <header class="topbar">
-  <div class="logo">
-    <div class="logo-dot"><i class="ti ti-credit-card"></i></div>
-    <span>SubTrack</span>
-    <span id="offlineBadge" class="offline-badge" style="display:none;">Офлайн</span>
-  </div>
-  <div class="topbar-right">
-    <button class="btn-icon" id="syncAllBtn">Синхронізувати</button>
-    <div class="avatar" id="userAvatar" title="Профіль">АК</div>
-    <button class="btn-icon" onclick="logoutUser()" style="border-color: rgba(239,68,68,0.2); color:#EF4444;">Вийти</button>
-  </div>
+    <div class="topbar-left">
+        <button class="menu-btn" id="menuToggle" aria-label="Меню"><i class="ti ti-menu-2"></i></button>
+        <div class="logo">
+            <div class="logo-dot"><i class="ti ti-credit-card"></i></div>
+            <span>SubTrack</span>
+            <span id="offlineBadge" class="offline-badge" style="display:none;">Офлайн</span>
+        </div>
+    </div>
+    <div class="topbar-right">
+        <!-- КНОПКА СИНХРОНІЗАЦІЇ ПОВНІСТЮ ВИДАЛЕНА -->
+        <div class="avatar" id="userAvatar" title="Профіль" onclick="navigate('profile')">АК</div>
+        <button class="btn-icon" onclick="logoutUser()" title="Вийти" style="border-color: rgba(239,68,68,0.2); color:#EF4444;"><i class="ti ti-logout"></i></button>
+    </div>
 </header>
 
-<div class="main">
-<nav class="sidebar">
-  <div class="nav-item active" onclick="navigate('dashboard')" id="nav-dashboard"><i class="ti ti-layout-dashboard"></i><span>Огляд</span></div>
-  <div class="nav-item" onclick="navigate('subscriptions')" id="nav-subscriptions"><i class="ti ti-credit-card"></i><span>Підписки</span></div>
-  <div class="nav-item" onclick="navigate('add')" id="nav-add"><i class="ti ti-plus"></i><span>Додати</span></div>
-  <div class="nav-item" onclick="navigate('connect')" id="nav-connect"><i class="ti ti-template"></i><span>Шаблони</span></div>
-  <div class="nav-sep"></div>
-  <div class="nav-item" onclick="navigate('profile')" id="nav-profile"><i class="ti ti-user"></i><span>Профіль</span></div>
-  <div class="nav-item" onclick="navigate('settings')" id="nav-settings"><i class="ti ti-settings"></i><span>Налаштування</span></div>
-</nav>
+<div class="main-wrapper">
+    <!-- Затемнення фону для мобільного меню -->
+    <div class="drawer-overlay" id="drawerOverlay"></div>
 
-<main class="content">
+    <!-- САЙДБАР (десктоп / виїзний на мобільних) -->
+    <nav class="sidebar" id="sidebar">
+        <div class="nav-item active" onclick="navigate('dashboard')" id="nav-dashboard"><i class="ti ti-layout-dashboard"></i><span>Огляд</span></div>
+        <div class="nav-item" onclick="navigate('subscriptions')" id="nav-subscriptions"><i class="ti ti-credit-card"></i><span>Підписки</span></div>
+        <div class="nav-item" onclick="navigate('add')" id="nav-add"><i class="ti ti-plus"></i><span>Додати</span></div>
+        <div class="nav-item" onclick="navigate('connect')" id="nav-connect"><i class="ti ti-template"></i><span>Шаблони</span></div>
+        <div class="nav-sep"></div>
+        <div class="nav-item" onclick="navigate('profile')" id="nav-profile"><i class="ti ti-user"></i><span>Профіль</span></div>
+        <div class="nav-item" onclick="navigate('settings')" id="nav-settings"><i class="ti ti-settings"></i><span>Налаштування</span></div>
+    </nav>
 
-<!-- DASHBOARD -->
-<div class="page active" id="page-dashboard">
-  <div class="section-title">Ваші підписки</div>
-  <div class="section-sub" id="dashSubtitle">Місяць червень 2026</div>
-  <div class="stats-grid">
-    <div class="stat-card purple"><div class="stat-label">За місяць</div><div class="stat-value" id="s-monthly">₴0</div><div class="stat-meta" id="s-count">0 підписок</div></div>
-    <div class="stat-card cyan"><div class="stat-label">За рік</div><div class="stat-value" id="s-yearly">₴0</div><div class="stat-meta">прогноз</div></div>
-    <div class="stat-card red"><div class="stat-label">Найдорожча</div><div class="stat-value" id="s-top">—</div><div class="stat-meta" id="s-top-name">немає підписок</div></div>
-    <div class="stat-card green"><div class="stat-label">Наступне</div><div class="stat-value" id="s-next-price">—</div><div class="stat-meta" id="s-next-date">немає списань</div></div>
-  </div>
-  <div style="display:flex;gap:14px;margin-bottom:24px;flex-wrap:wrap">
-    <div style="flex:1;min-width:200px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px">
-      <div class="section-header" style="margin-bottom:0"><div class="section-h">Витрати по категоріях</div></div>
-      <div class="dial-wrap"><div class="dial-container"><svg viewBox="0 0 180 180" id="dialSvg"><circle cx="90" cy="90" r="70" fill="none" stroke="#1E2535" stroke-width="18"/></svg><div class="dial-center"><div class="dial-amount" id="dialAmt">₴0</div><div class="dial-label">/ місяць</div></div></div></div>
-      <div class="pie-legend" id="pieLegend"><div style="text-align:center;color:var(--text3);font-size:13px">Додайте підписки</div></div>
-    </div>
-    <div style="flex:1;min-width:200px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px">
-      <div class="section-h" style="margin-bottom:14px">Найближчі списання</div>
-      <div id="upcomingList"><div class="empty-state" style="padding:24px 0"><i class="ti ti-calendar"></i><div>Немає підписок</div></div></div>
-    </div>
-  </div>
-  <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px">
-    <div class="section-h" style="margin-bottom:14px">Всі підписки</div>
-    <div id="dashSubList"><div class="empty-state"><i class="ti ti-credit-card"></i><div>Підписок ще немає</div><div style="margin-top:8px"><button class="btn-primary" onclick="navigate('add')" style="font-size:13px;padding:7px 14px">Додати першу</button></div></div></div>
-  </div>
-</div>
+    <main class="content">
+        <!-- DASHBOARD -->
+        <div class="page active" id="page-dashboard">
+            <div class="section-title">Ваші підписки</div>
+            <div class="section-sub" id="dashSubtitle">Місяць червень 2026</div>
+            <div class="stats-grid">
+                <div class="stat-card purple"><div class="stat-label">За місяць</div><div class="stat-value" id="s-monthly">₴0</div><div class="stat-meta" id="s-count">0 підписок</div></div>
+                <div class="stat-card cyan"><div class="stat-label">За рік</div><div class="stat-value" id="s-yearly">₴0</div><div class="stat-meta">прогноз</div></div>
+                <div class="stat-card red"><div class="stat-label">Найдорожча</div><div class="stat-value" id="s-top">—</div><div class="stat-meta" id="s-top-name">немає підписок</div></div>
+                <div class="stat-card green"><div class="stat-label">Наступне</div><div class="stat-value" id="s-next-price">—</div><div class="stat-meta" id="s-next-date">немає списань</div></div>
+            </div>
+            <div style="display:flex;gap:14px;margin-bottom:24px;flex-wrap:wrap">
+                <div style="flex:1;min-width:200px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px">
+                    <div class="section-header" style="margin-bottom:0"><div class="section-h">Витрати по категоріях</div></div>
+                    <div class="dial-wrap"><div class="dial-container"><svg viewBox="0 0 180 180" id="dialSvg"><circle cx="90" cy="90" r="70" fill="none" stroke="#1E2535" stroke-width="18"/></svg><div class="dial-center"><div class="dial-amount" id="dialAmt">₴0</div><div class="dial-label">/ місяць</div></div></div></div>
+                    <div class="pie-legend" id="pieLegend"><div style="text-align:center;color:var(--text3);font-size:13px">Додайте підписки</div></div>
+                </div>
+                <div style="flex:1;min-width:200px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px">
+                    <div class="section-h" style="margin-bottom:14px">Найближчі списання</div>
+                    <div id="upcomingList"><div class="empty-state" style="padding:16px 0"><i class="ti ti-calendar"></i><div>Немає підписок</div></div></div>
+                </div>
+            </div>
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px">
+                <div class="section-h" style="margin-bottom:14px">Всі підписки</div>
+                <div id="dashSubList"><div class="empty-state"><i class="ti ti-credit-card"></i><div>Підписок ще немає</div><div style="margin-top:8px"><button class="btn-primary" onclick="navigate('add')" style="font-size:13px;padding:6px 14px">Додати першу</button></div></div></div>
+            </div>
+        </div>
 
-<!-- SUBSCRIPTIONS LIST -->
-<div class="page" id="page-subscriptions">
-  <div class="section-header">
-    <div><div class="section-title">Всі підписки</div><div class="section-sub" style="margin-bottom:0">Повний список сервісів</div></div>
-    <button class="btn-primary" onclick="navigate('add')">Додати</button>
-  </div>
-  <div style="display:flex;gap:10px;margin-bottom:18px">
-    <div style="flex:1"><input type="text" id="searchInput" placeholder="Пошук..." oninput="renderAll()"></div>
-    <select id="filterBilling" onchange="renderAll()" style="width:140px"><option value="">Всі типи</option><option value="monthly">Щомісячні</option><option value="yearly">Щорічні</option></select>
-    <select id="sortBy" onchange="renderAll()" style="width:140px"><option value="date">За датою</option><option value="price-asc">Ціна ↑</option><option value="price-desc">Ціна ↓</option><option value="name">За назвою</option></select>
-  </div>
-  <div id="fullSubList"></div>
-</div>
+        <!-- SUBSCRIPTIONS LIST -->
+        <div class="page" id="page-subscriptions">
+            <div class="section-header">
+                <div><div class="section-title">Всі підписки</div><div class="section-sub" style="margin-bottom:0">Повний список сервісів</div></div>
+                <button class="btn-primary" onclick="navigate('add')">Додати</button>
+            </div>
+            <div style="display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap">
+                <div style="flex:1;min-width:150px"><input type="text" id="searchInput" placeholder="Пошук..." oninput="renderAll()"></div>
+                <select id="filterBilling" onchange="renderAll()" style="width:140px"><option value="">Всі типи</option><option value="monthly">Щомісячні</option><option value="yearly">Щорічні</option></select>
+                <select id="sortBy" onchange="renderAll()" style="width:140px"><option value="date">За датою</option><option value="price-asc">Ціна ↑</option><option value="price-desc">Ціна ↓</option><option value="name">За назвою</option></select>
+            </div>
+            <div id="fullSubList"></div>
+        </div>
 
-<!-- ADD -->
-<div class="page" id="page-add">
-  <div class="section-title" id="formTitle">Нова підписка</div>
-  <div class="section-sub">Вкажіть дані сервісу</div>
-  <div class="form-card">
-    <input type="hidden" id="editId">
-    <div class="form-grid">
-      <div class="form-row"><label class="form-label">Назва *</label><input type="text" id="fName" placeholder="Netflix, Spotify..."></div>
-      <div class="form-row"><label class="form-label">Категорія</label><select id="fCategory"><option value="Стрімінг">Стрімінг</option><option value="Музика">Музика</option><option value="Продуктивність">Продуктивність</option><option value="Хмара">Хмара</option><option value="Ігри">Ігри</option><option value="Безпека">Безпека</option><option value="Новини">Новини</option><option value="ШІ">ШІ</option><option value="Інше">Інше</option></select></div>
-    </div>
-    <div class="form-grid">
-      <div class="form-row"><label class="form-label">Ціна *</label><div style="display:flex;gap:8px"><input type="number" id="fPrice" placeholder="0.00" step="0.01" style="flex:1"><select id="fCurrency" style="width:80px"><option>₴</option><option>$</option><option>€</option><option>£</option></select></div></div>
-      <div class="form-row"><label class="form-label">Тип оплати</label><select id="fBilling"><option value="monthly">Щомісяця</option><option value="yearly">Щороку</option><option value="weekly">Щотижня</option></select></div>
-    </div>
-    <div class="form-grid">
-      <div class="form-row"><label class="form-label">Дата списання *</label><input type="date" id="fDate"></div>
-      <div class="form-row"><label class="form-label">Картка</label><select id="fCard"><option value="">— Не вказана —</option></select></div>
-    </div>
-    <div class="form-row"><label class="form-label">Нотатка</label><input type="text" id="fNote" placeholder="Додаткова інформація..."></div>
-    <div class="form-actions"><button class="btn-primary" onclick="saveSubscription()" id="saveBtn">Зберегти</button><button class="btn-outline" onclick="cancelEdit()">Скасувати</button></div>
-  </div>
-</div>
+        <!-- ADD -->
+        <div class="page" id="page-add">
+            <div class="section-title" id="formTitle">Нова підписка</div>
+            <div class="section-sub">Вкажіть дані сервісу</div>
+            <div class="form-card">
+                <input type="hidden" id="editId">
+                <div class="form-grid">
+                    <div class="form-row"><label class="form-label">Назва *</label><input type="text" id="fName" placeholder="Netflix, Spotify..."></div>
+                    <div class="form-row"><label class="form-label">Категорія</label><select id="fCategory"><option value="Стрімінг">Стрімінг</option><option value="Музика">Музика</option><option value="Продуктивність">Продуктивність</option><option value="Хмара">Хмара</option><option value="Ігри">Ігри</option><option value="Безпека">Безпека</option><option value="Новини">Новини</option><option value="ШІ">ШІ</option><option value="Інше">Інше</option></select></div>
+                </div>
+                <div class="form-grid">
+                    <div class="form-row"><label class="form-label">Ціна *</label><div style="display:flex;gap:8px"><input type="number" id="fPrice" placeholder="0.00" step="0.01" style="flex:1"><select id="fCurrency" style="width:80px"><option>₴</option><option>$</option><option>€</option><option>£</option></select></div></div>
+                    <div class="form-row"><label class="form-label">Тип оплати</label><select id="fBilling"><option value="monthly">Щомісяця</option><option value="yearly">Щороку</option><option value="weekly">Щотижня</option></select></div>
+                </div>
+                <div class="form-grid">
+                    <div class="form-row"><label class="form-label">Дата списання *</label><input type="date" id="fDate"></div>
+                    <div class="form-row"><label class="form-label">Картка</label><select id="fCard"><option value="">— Не вказана —</option></select></div>
+                </div>
+                <div class="form-row"><label class="form-label">Нотатка</label><input type="text" id="fNote" placeholder="Додаткова інформація..."></div>
+                <div class="form-actions"><button class="btn-primary" onclick="saveSubscription()" id="saveBtn">Зберегти</button><button class="btn-outline" onclick="cancelEdit()">Скасувати</button></div>
+            </div>
+        </div>
 
-<!-- ШАБЛОНИ -->
-<div class="page" id="page-connect">
-  <div class="section-title">Шаблони підписок</div>
-  <div class="section-sub">Оберіть популярний сервіс, щоб миттєво додати його до свого списку</div>
-  <div style="background:rgba(124,58,237,.08);border:1px solid rgba(124,58,237,.2);border-radius:var(--radius);padding:14px 18px;margin-bottom:20px;display:flex;align-items:center;gap:10px;font-size:13px;color:#C4B5FD">
-    <i class="ti ti-template" style="font-size:18px;flex-shrink:0"></i> 
-    Натисніть «Додати», щоб створити підписку з готовим шаблоном (ціна, категорія та дата вже заповнені).
-  </div>
-  <div class="connect-grid" id="connectGrid"></div>
-</div>
+        <!-- ШАБЛОНИ -->
+        <div class="page" id="page-connect">
+            <div class="section-title">Шаблони підписок</div>
+            <div class="section-sub">Оберіть популярний сервіс, щоб миттєво додати його до свого списку</div>
+            <div style="background:rgba(124,58,237,.08);border:1px solid rgba(124,58,237,.2);border-radius:var(--radius);padding:12px 16px;margin-bottom:20px;display:flex;align-items:center;gap:10px;font-size:13px;color:#C4B5FD">
+                <i class="ti ti-template" style="font-size:18px;flex-shrink:0"></i> 
+                Натисніть «Додати», щоб створити підписку з готовим шаблоном (ціна, категорія та дата вже заповнені).
+            </div>
+            <div class="connect-grid" id="connectGrid"></div>
+        </div>
 
-<!-- PROFILE -->
-<div class="page" id="page-profile">
-  <div class="section-title">Профіль</div>
-  <div class="section-sub">Ваш акаунт та налаштування</div>
-  <div class="profile-card" style="text-align:center">
-    <div class="avatar-lg" id="profileAvatar">АК</div>
-    <div style="font-size:18px;font-weight:700" id="profileName">Користувач</div>
-    <div style="font-size:13px;color:var(--text3);margin-top:4px" id="profileEmail">user@example.com</div>
-    <div style="margin-top:8px;font-size:12px;color:var(--text3)" id="profileMode"></div>
-  </div>
-  <div class="profile-card">
-    <div class="form-title"><i class="ti ti-credit-card"></i> Картки для списання</div>
-    <div id="cardsList"></div>
-    <button class="btn-outline" style="font-size:13px;padding:7px 14px;margin-top:10px" onclick="openAddCard()">Додати картку</button>
-  </div>
-</div>
+        <!-- PROFILE -->
+        <div class="page" id="page-profile">
+            <div class="section-title">Профіль</div>
+            <div class="section-sub">Ваш акаунт та налаштування</div>
+            <div class="profile-card" style="text-align:center">
+                <div class="avatar-lg" id="profileAvatar">АК</div>
+                <div style="font-size:18px;font-weight:700" id="profileName">Користувач</div>
+                <div style="font-size:13px;color:var(--text3);margin-top:4px" id="profileEmail">user@example.com</div>
+                <div style="margin-top:8px;font-size:12px;color:var(--text3)" id="profileMode"></div>
+            </div>
+            <div class="profile-card">
+                <div class="form-title"><i class="ti ti-credit-card"></i> Картки для списання</div>
+                <div id="cardsList"></div>
+                <button class="btn-outline" style="font-size:13px;padding:6px 14px;margin-top:10px" onclick="openAddCard()">Додати картку</button>
+            </div>
+        </div>
 
-<!-- SETTINGS -->
-<div class="page" id="page-settings">
-  <div class="section-title">Налаштування</div>
-  <div class="section-sub">Персоналізація застосунку</div>
-  <div class="profile-card">
-    <div class="form-title"><i class="ti ti-palette"></i> Тема оформлення</div>
-    <div class="theme-options" id="themeOptions">
-      <div class="theme-opt selected" style="background:#0D0F14;border-color:var(--accent)" onclick="setTheme('dark')" title="Темна"></div>
-      <div class="theme-opt" style="background:#F8FAFC" onclick="setTheme('light')" title="Світла"></div>
-      <div class="theme-opt" style="background:#0F172A" onclick="setTheme('midnight')" title="Нічна"></div>
-      <div class="theme-opt" style="background:linear-gradient(135deg,#1a1a2e,#16213e)" onclick="setTheme('navy')" title="Синя"></div>
-    </div>
-    <div style="font-size:13px;color:var(--text3);margin-top:8px">Активна: <span id="themeLabel">Темна</span></div>
-  </div>
-  <div class="profile-card">
-    <div class="form-title"><i class="ti ti-currency-dollar"></i> Валюта</div>
-    <select id="defaultCurrency" style="width:200px" onchange="saveSetting('currency',this.value)">
-      <option value="₴">₴ Гривня (UAH)</option>
-      <option value="$">$ Долар (USD)</option>
-      <option value="€">€ Євро (EUR)</option>
-    </select>
-  </div>
-  <div class="profile-card">
-    <div class="form-title"><i class="ti ti-database-export"></i> Дані</div>
-    <div style="display:flex;gap:10px">
-      <button class="btn-outline" style="font-size:13px;padding:7px 14px" onclick="exportData()">Експорт JSON</button>
-      <button class="btn-outline" style="font-size:13px;padding:7px 14px" onclick="clearAllData()">Очистити все</button>
-    </div>
-  </div>
-</div>
-
-</main>
+        <!-- SETTINGS -->
+        <div class="page" id="page-settings">
+            <div class="section-title">Налаштування</div>
+            <div class="section-sub">Персоналізація застосунку</div>
+            <div class="profile-card">
+                <div class="form-title"><i class="ti ti-palette"></i> Тема оформлення</div>
+                <div class="theme-options" id="themeOptions">
+                    <div class="theme-opt selected" style="background:#0D0F14;border-color:var(--accent)" onclick="setTheme('dark')" title="Темна"></div>
+                    <div class="theme-opt" style="background:#F8FAFC" onclick="setTheme('light')" title="Світла"></div>
+                    <div class="theme-opt" style="background:#0F172A" onclick="setTheme('midnight')" title="Нічна"></div>
+                    <div class="theme-opt" style="background:linear-gradient(135deg,#1a1a2e,#16213e)" onclick="setTheme('navy')" title="Синя"></div>
+                </div>
+                <div style="font-size:13px;color:var(--text3);margin-top:8px">Активна: <span id="themeLabel">Темна</span></div>
+            </div>
+            <div class="profile-card">
+                <div class="form-title"><i class="ti ti-currency-dollar"></i> Валюта</div>
+                <select id="defaultCurrency" style="width:200px" onchange="saveSetting('currency',this.value)">
+                    <option value="₴">₴ Гривня (UAH)</option>
+                    <option value="$">$ Долар (USD)</option>
+                    <option value="€">€ Євро (EUR)</option>
+                </select>
+            </div>
+            <div class="profile-card">
+                <div class="form-title"><i class="ti ti-database-export"></i> Дані</div>
+                <div style="display:flex;gap:10px">
+                    <button class="btn-outline" style="font-size:13px;padding:6px 14px" onclick="exportData()">Експорт JSON</button>
+                    <button class="btn-outline" style="font-size:13px;padding:6px 14px" onclick="clearAllData()">Очистити все</button>
+                </div>
+            </div>
+        </div>
+    </main>
 </div>
 </div>
 </div>
 
 <!-- МОДАЛ КАРТКИ -->
 <div class="modal-backdrop" id="cardModal">
-  <div class="modal">
-    <div class="modal-title">Додати картку <button class="close-btn" onclick="closeModal()"><i class="ti ti-x"></i></button></div>
-    <div class="form-row"><label class="form-label">Номер (останні 4 цифри)</label><input type="text" id="cardNum" maxlength="4" placeholder="1234"></div>
-    <div class="form-row"><label class="form-label">Назва / банк</label><input type="text" id="cardName" placeholder="Monobank Visa"></div>
-    <div style="display:flex;gap:10px;margin-top:14px"><button class="btn-primary" onclick="saveCard()">Зберегти</button><button class="btn-outline" onclick="closeModal()">Скасувати</button></div>
-  </div>
+    <div class="modal">
+        <div class="modal-title">Додати картку <button class="close-btn" onclick="closeModal()"><i class="ti ti-x"></i></button></div>
+        <div class="form-row"><label class="form-label">Номер (останні 4 цифри)</label><input type="text" id="cardNum" maxlength="4" placeholder="1234"></div>
+        <div class="form-row"><label class="form-label">Назва / банк</label><input type="text" id="cardName" placeholder="Monobank Visa"></div>
+        <div style="display:flex;gap:10px;margin-top:14px"><button class="btn-primary" onclick="saveCard()">Зберегти</button><button class="btn-outline" onclick="closeModal()">Скасувати</button></div>
+    </div>
 </div>
 
-<div class="sync-toast" id="syncToast"><i class="ti ti-check"></i> <span id="syncMsg">Синхронізовано!</span></div>
+<div class="sync-toast" id="syncToast"><i class="ti ti-check"></i> <span id="syncMsg">Готово!</span></div>
 
 <script>
+// ===== КОД JAVASCRIPT (без синхронізації) =====
 const COLORS=['#7C3AED','#06B6D4','#10B981','#F59E0B','#EF4444','#8B5CF6','#EC4899','#14B8A6'];
 const CAT_ICONS={Стрімінг:'📺',Музика:'🎵',Продуктивність:'⚡',Хмара:'☁️',Ігри:'🎮',Безпека:'🔒',Новини:'📰',ШІ:'🤖',Інше:'✨'};
 
 let state = { subscriptions: [], cards: [], connectedServices: {}, syncLog: [], theme: 'dark', currency: '₴' };
 let currentUser = null;
 let isLoginMode = true;
-let isOffline = false;           // true – працюємо з localStorage
+let isOffline = false;
 let isGuest = false;
+
+// --- МЕНЮ (гамбургер) ---
+function toggleMenu() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('drawerOverlay');
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('active');
+}
+function closeMenu() {
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('drawerOverlay').classList.remove('active');
+}
+document.getElementById('menuToggle').addEventListener('click', toggleMenu);
+document.getElementById('drawerOverlay').addEventListener('click', closeMenu);
+document.querySelectorAll('.nav-item').forEach(item => {
+    item.addEventListener('click', () => {
+        if (window.innerWidth <= 768) closeMenu();
+    });
+});
 
 // --- АВТОРИЗАЦІЯ ---
 function switchAuthMode() {
@@ -382,16 +496,13 @@ function switchAuthMode() {
     document.getElementById('switchText').innerText = isLoginMode ? 'Зареєструватись' : 'Вже маєте акаунт? Увійти';
     document.getElementById('authError').style.display = 'none';
 }
-
 function showAuthError(msg) {
     const el = document.getElementById('authError');
     el.innerText = '⚠️ ' + msg;
     el.style.display = 'block';
 }
 
-// --- ВХІД ГОСТЯ (з підтримкою офлайн) ---
 async function guestLogin() {
-    // Спроба підключитися до сервера
     try {
         const res = await fetch('/api/guest', { method: 'POST' });
         if (res.ok) {
@@ -403,20 +514,16 @@ async function guestLogin() {
             showApp();
             return;
         } else {
-            // Якщо сервер повернув помилку – переходимо в офлайн
             startOfflineGuest();
         }
     } catch (e) {
-        // Немає з'єднання – офлайн
         startOfflineGuest();
     }
 }
-
 function startOfflineGuest() {
     currentUser = 'guest_offline';
     isOffline = true;
     isGuest = true;
-    // Завантажуємо дані з localStorage (якщо є)
     const saved = localStorage.getItem('subtrack_guest_offline');
     if (saved) {
         try { state = JSON.parse(saved); } catch(e) { state = { subscriptions: [], cards: [], connectedServices: {}, syncLog: [], theme: 'dark', currency: '₴' }; }
@@ -427,7 +534,6 @@ function startOfflineGuest() {
     showToast('⚡ Офлайн-режим. Дані зберігаються в браузері.');
 }
 
-// --- ЗВИЧАЙНА АВТОРИЗАЦІЯ ---
 async function handleAuth() {
     const username = document.getElementById('authUsername').value.trim();
     const password = document.getElementById('authPassword').value.trim();
@@ -467,13 +573,12 @@ async function logoutUser() {
     document.getElementById('authPassword').value = '';
     if (!isLoginMode) switchAuthMode();
     localStorage.removeItem('subtrack_guest_offline');
+    closeMenu();
 }
 
 async function checkAuth() {
-    // Спершу перевіряємо, чи є guest_offline в localStorage (для офлайн-режиму)
     const saved = localStorage.getItem('subtrack_guest_offline');
     if (saved && currentUser === null) {
-        // Автоматичне відновлення офлайн-гостя при перезавантаженні
         try {
             state = JSON.parse(saved);
             currentUser = 'guest_offline';
@@ -483,7 +588,6 @@ async function checkAuth() {
             return;
         } catch(e) {}
     }
-
     try {
         const res = await fetch('/api/me');
         if (res.ok) {
@@ -506,30 +610,23 @@ async function checkAuth() {
 function showApp() {
     document.getElementById('authContainer').style.display = 'none';
     document.getElementById('appContainer').style.display = 'block';
-    
-    // Показуємо бейдж офлайн
     document.getElementById('offlineBadge').style.display = isOffline ? 'inline-block' : 'none';
-    
     const initial = currentUser ? currentUser.charAt(0).toUpperCase() : 'Г';
     document.getElementById('userAvatar').innerText = initial;
     document.getElementById('profileAvatar').innerText = initial;
     document.getElementById('profileName').innerText = isGuest ? 'Гість' : currentUser;
     document.getElementById('profileEmail').innerText = isGuest ? 'guest@subtrack.local' : (currentUser + '@subtrack.local');
     document.getElementById('profileMode').innerText = isOffline ? '⚡ Офлайн-режим (дані в браузері)' : '🌐 Онлайн (сервер)';
-    
     clearForm();
     if (state.theme) setTheme(state.theme);
     if (state.currency) document.getElementById('defaultCurrency').value = state.currency;
     updateCardSelect();
     renderDashboard();
+    closeMenu();
 }
 
-// --- РОБОТА З ДАНИМИ (Онлайн / Офлайн) ---
 async function loadUserData() {
-    if (isOffline) {
-        // Дані вже завантажені з localStorage у startOfflineGuest
-        return;
-    }
+    if (isOffline) return;
     try {
         const res = await fetch('/api/data');
         if (res.ok) {
@@ -546,7 +643,6 @@ async function loadUserData() {
 
 async function saveState() {
     if (isOffline) {
-        // Зберігаємо в localStorage
         localStorage.setItem('subtrack_guest_offline', JSON.stringify(state));
         return;
     }
@@ -562,7 +658,6 @@ async function saveState() {
     }
 }
 
-// --- ІНШІ ФУНКЦІЇ (UI) ---
 function showToast(msg){
   const t=document.getElementById('syncToast');
   document.getElementById('syncMsg').textContent=msg;
@@ -581,6 +676,7 @@ function navigate(page){
   if(page==='subscriptions') renderAll();
   if(page==='connect') renderTemplates();
   if(page==='profile') renderProfile();
+  if (window.innerWidth <= 768) closeMenu();
 }
 
 function getMonthlyPrice(s){
@@ -589,18 +685,15 @@ function getMonthlyPrice(s){
   if(s.billing==='weekly')return parseFloat(s.price)*4.33;
   return parseFloat(s.price);
 }
-
 function daysUntil(dateStr){
   const d=new Date(dateStr);const now=new Date();
   return Math.ceil((d-now)/(1000*60*60*24));
 }
-
 function subIconEl(s){
   const col=COLORS[state.subscriptions.indexOf(s)%COLORS.length];
   const ico=CAT_ICONS[s.category||'Інше']||'✨';
   return `<div class="sub-icon" style="background:${col}22;color:${col};font-size:14px">${ico}</div>`;
 }
-
 function billingLabel(b){return b==='monthly'?'Щомісяця':b==='yearly'?'Щороку':'Щотижня';}
 
 function renderDashboard(){
@@ -610,7 +703,6 @@ function renderDashboard(){
   document.getElementById('s-yearly').textContent=state.currency+(total*12).toFixed(0);
   document.getElementById('s-count').textContent=subs.length+' підписок';
   document.getElementById('dialAmt').textContent=state.currency+total.toFixed(0);
-
   const sorted=[...subs].sort((a,b)=>getMonthlyPrice(b)-getMonthlyPrice(a));
   if(sorted.length){
     document.getElementById('s-top').textContent=state.currency+getMonthlyPrice(sorted[0]).toFixed(0);
@@ -619,7 +711,6 @@ function renderDashboard(){
     document.getElementById('s-top').textContent='—';
     document.getElementById('s-top-name').textContent='немає підписок';
   }
-
   const byDate=[...subs].sort((a,b)=>new Date(a.date)-new Date(b.date));
   const next=byDate.find(s=>daysUntil(s.date)>=0);
   if(next){
@@ -630,7 +721,6 @@ function renderDashboard(){
     document.getElementById('s-next-price').textContent='—';
     document.getElementById('s-next-date').textContent='немає списань';
   }
-
   renderDial(subs,total);
   renderUpcoming(byDate);
   renderDashList(subs);
@@ -675,7 +765,7 @@ function renderUpcoming(sorted){
 
 function renderDashList(subs){
   const el=document.getElementById('dashSubList');
-  if(!subs.length){el.innerHTML='<div class="empty-state"><i class="ti ti-credit-card"></i><div>Підписок ще немає</div><div style="margin-top:8px"><button class="btn-primary" onclick="navigate(\'add\')" style="font-size:13px;padding:7px 14px">Додати першу</button></div></div>';return;}
+  if(!subs.length){el.innerHTML='<div class="empty-state"><i class="ti ti-credit-card"></i><div>Підписок ще немає</div><div style="margin-top:8px"><button class="btn-primary" onclick="navigate(\'add\')" style="font-size:13px;padding:6px 14px">Додати першу</button></div></div>';return;}
   el.innerHTML='<div class="sub-list">'+subs.map(s=>subCardHtml(s)).join('')+'</div>';
 }
 
@@ -735,7 +825,6 @@ function clearForm(){
   const today=new Date();today.setDate(today.getDate()+1);
   document.getElementById('fDate').value=today.toISOString().split('T')[0];
 }
-
 function cancelEdit(){clearForm();navigate('dashboard');}
 
 function editSub(id){
@@ -753,7 +842,6 @@ function editSub(id){
   document.getElementById('saveBtn').textContent='Оновити';
   navigate('add');
 }
-
 async function deleteSub(id){
   state.subscriptions=state.subscriptions.filter(s=>s.id!==id);
   await saveState(); renderAll(); renderDashboard(); showToast('Видалено');
@@ -822,16 +910,6 @@ async function addTemplate(id){
   renderAll();
 }
 
-document.getElementById('syncAllBtn').addEventListener('click', async ()=>{
-  if (isOffline) {
-    showToast('⚡ Офлайн-режим. Дані зберігаються локально.');
-    return;
-  }
-  await loadUserData();
-  renderDashboard();
-  showToast('Дані оновлено!');
-});
-
 function renderProfile(){
   const cl=document.getElementById('cardsList');
   if(!state.cards.length){cl.innerHTML='<div style="color:var(--text3);font-size:13px">Картки не додані</div>';return;}
@@ -871,7 +949,7 @@ async function saveSetting(k,v){state[k]=v; await saveState();}
 function exportData(){const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='subtrack-export.json';a.click();}
 async function clearAllData(){if(confirm('Видалити всі дані?')){state.subscriptions=[];state.cards=[];state.connectedServices={};state.syncLog=[];await saveState(); renderDashboard(); showToast('Дані очищено');}}
 
-// --- СТАРТ ---
+// ===== СТАРТ =====
 clearForm();
 checkAuth();
 </script>
