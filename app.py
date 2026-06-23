@@ -1,14 +1,14 @@
 from flask import Flask, render_template, request, jsonify, session
 import json
 import os
+import uuid  # для генерації унікальних імен гостей
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
-app.secret_key = 'supersecret_subtrack_key_2026'  # Замініть на свій ключ у продакшені
+app.secret_key = 'supersecret_subtrack_key_2026'
 
 DB_FILE = 'db.json'
 
-# --- Ініціалізація бази даних ---
 def init_db():
     if not os.path.exists(DB_FILE):
         with open(DB_FILE, 'w', encoding='utf-8') as f:
@@ -28,12 +28,11 @@ def get_user_data(username):
     db = load_db()
     return db['users'].get(username)
 
-# --- Головна сторінка ---
 @app.route('/')
 def index():
     return render_template('index.html')
 
-# --- API АВТОРИЗАЦІЇ ---
+# --- АВТОРИЗАЦІЯ ---
 @app.route('/api/register', methods=['POST'])
 def register():
     data = request.get_json()
@@ -47,7 +46,6 @@ def register():
     if username in db['users']:
         return jsonify({'error': 'Користувач з таким логіном вже існує'}), 400
     
-    # Створюємо нового користувача з порожніми даними
     db['users'][username] = {
         'password': generate_password_hash(password),
         'subscriptions': [],
@@ -58,8 +56,6 @@ def register():
         'currency': '₴'
     }
     save_db(db)
-    
-    # Автоматично входимо після реєстрації
     session['user'] = username
     return jsonify({'status': 'ok', 'username': username})
 
@@ -73,6 +69,35 @@ def login():
     if not user or not check_password_hash(user['password'], password):
         return jsonify({'error': 'Невірний логін або пароль'}), 401
     
+    session['user'] = username
+    return jsonify({'status': 'ok', 'username': username})
+
+# --- НОВИЙ МАРШРУТ ДЛЯ ГОСТЯ ---
+@app.route('/api/guest', methods=['POST'])
+def guest_login():
+    # Генеруємо унікальне ім'я для гостя
+    guest_id = uuid.uuid4().hex[:8]
+    username = f"guest_{guest_id}"
+    
+    db = load_db()
+    # Якщо таке ім'я вже існує (дуже малоймовірно) - додаємо ще цифр
+    while username in db['users']:
+        guest_id = uuid.uuid4().hex[:8]
+        username = f"guest_{guest_id}"
+    
+    # Створюємо гостя без пароля (ставимо пустий хеш)
+    db['users'][username] = {
+        'password': generate_password_hash(''),  # порожній пароль
+        'subscriptions': [],
+        'cards': [],
+        'connectedServices': {},
+        'syncLog': [],
+        'theme': 'dark',
+        'currency': '₴'
+    }
+    save_db(db)
+    
+    # Входимо в систему
     session['user'] = username
     return jsonify({'status': 'ok', 'username': username})
 
@@ -132,7 +157,6 @@ def update_user_data_api():
     if username not in db['users']:
         return jsonify({'error': 'User not found'}), 401
     
-    # Оновлюємо тільки дозволені поля
     db['users'][username].update({
         'subscriptions': new_data.get('subscriptions', []),
         'cards': new_data.get('cards', []),

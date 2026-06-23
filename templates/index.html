@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/2.47.0/tabler-icons.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono:wght@500;600&display=swap" rel="stylesheet">
     <style>
-        /* Усі стилі залишаються незмінними (з попередньої версії) */
+        /* ===== СТИЛІ (без змін, ті ж самі) ===== */
         *{box-sizing:border-box;margin:0;padding:0}
         :root{
           --bg:#0D0F14;--surface:#161B26;--surface2:#1E2535;--surface3:#252D3D;
@@ -46,10 +46,20 @@
         .auth-box .form-row input { padding: 12px; }
         .auth-box .btn-primary { width: 100%; padding: 12px; font-weight: 700; font-size: 15px; background: var(--accent); color: white; border-radius: var(--radius-xs); transition: opacity 0.2s; }
         .auth-box .btn-primary:hover { opacity: 0.85; }
+        .guest-btn {
+            width: 100%; padding: 12px; font-weight: 500; font-size: 14px;
+            background: var(--surface2); color: var(--text2);
+            border: 1px solid var(--border); border-radius: var(--radius-xs);
+            transition: all 0.2s; margin-top: 8px;
+        }
+        .guest-btn:hover { background: var(--surface3); color: var(--text); border-color: var(--border2); }
         .auth-switch { text-align: center; margin-top: 16px; font-size: 14px; color: var(--text3); cursor: pointer; }
         .auth-switch span { color: var(--accent); font-weight: 700; }
         .auth-error { background: rgba(239,68,68,0.15); color: #F87171; padding: 10px; border-radius: var(--radius-xs); margin-bottom: 16px; display: none; font-size: 13px; border-left: 3px solid var(--danger); }
+        .auth-divider { display: flex; align-items: center; gap: 12px; margin: 12px 0; color: var(--text3); font-size: 12px; }
+        .auth-divider hr { flex: 1; border: none; height: 1px; background: var(--border); }
         .auth-avatar { width: 64px; height: 64px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent2)); display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 700; margin: 0 auto 12px; color: white; }
+        .offline-badge { display: inline-block; background: rgba(245,158,11,.2); color: var(--warn); padding: 2px 10px; border-radius: 12px; font-size: 11px; font-weight: 500; border: 1px solid rgba(245,158,11,.3); margin-left: 8px; }
 
         #appContainer { display: none; }
 
@@ -133,8 +143,6 @@
         .connected{background:rgba(16,185,129,.12);color:var(--accent3);border:1px solid rgba(16,185,129,.25)}
         .not-connected{background:var(--surface2);color:var(--text2);border:1px solid var(--border)}
         .not-connected:hover{background:var(--surface3);color:var(--text)}
-        .connected-dot{width:8px;height:8px;border-radius:50%;background:var(--accent3);display:inline-block;margin-right:5px;animation:pulse 2s infinite}
-        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
         .profile-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px}
         .avatar-lg{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;margin:0 auto 12px;color:white;}
         .theme-options{display:flex;gap:10px;margin-top:10px}
@@ -178,6 +186,8 @@
             <input type="password" id="authPassword" placeholder="Ваш пароль">
         </div>
         <button class="btn-primary" id="authSubmitBtn" onclick="handleAuth()">Увійти</button>
+        <div class="auth-divider"><hr> АБО <hr></div>
+        <button class="guest-btn" onclick="guestLogin()">👤 Увійти як гість</button>
         <div class="auth-switch" onclick="switchAuthMode()">
             <span id="switchText">Зареєструватись</span>
         </div>
@@ -191,12 +201,11 @@
   <div class="logo">
     <div class="logo-dot"><i class="ti ti-credit-card"></i></div>
     <span>SubTrack</span>
+    <span id="offlineBadge" class="offline-badge" style="display:none;">Офлайн</span>
   </div>
   <div class="topbar-right">
-    <!-- Кнопка без іконки -->
     <button class="btn-icon" id="syncAllBtn">Синхронізувати</button>
     <div class="avatar" id="userAvatar" title="Профіль">АК</div>
-    <!-- Кнопка виходу без іконки -->
     <button class="btn-icon" onclick="logoutUser()" style="border-color: rgba(239,68,68,0.2); color:#EF4444;">Вийти</button>
   </div>
 </header>
@@ -206,7 +215,7 @@
   <div class="nav-item active" onclick="navigate('dashboard')" id="nav-dashboard"><i class="ti ti-layout-dashboard"></i><span>Огляд</span></div>
   <div class="nav-item" onclick="navigate('subscriptions')" id="nav-subscriptions"><i class="ti ti-credit-card"></i><span>Підписки</span></div>
   <div class="nav-item" onclick="navigate('add')" id="nav-add"><i class="ti ti-plus"></i><span>Додати</span></div>
-  <div class="nav-item" onclick="navigate('connect')" id="nav-connect"><i class="ti ti-plug"></i><span>Підключення</span></div>
+  <div class="nav-item" onclick="navigate('connect')" id="nav-connect"><i class="ti ti-template"></i><span>Шаблони</span></div>
   <div class="nav-sep"></div>
   <div class="nav-item" onclick="navigate('profile')" id="nav-profile"><i class="ti ti-user"></i><span>Профіль</span></div>
   <div class="nav-item" onclick="navigate('settings')" id="nav-settings"><i class="ti ti-settings"></i><span>Налаштування</span></div>
@@ -278,13 +287,15 @@
   </div>
 </div>
 
-<!-- CONNECT -->
+<!-- ШАБЛОНИ -->
 <div class="page" id="page-connect">
-  <div class="section-title">Підключення сервісів</div>
-  <div class="section-sub">Автоматичне отримання даних підписок з ваших акаунтів</div>
-  <div style="background:rgba(124,58,237,.08);border:1px solid rgba(124,58,237,.2);border-radius:var(--radius);padding:14px 18px;margin-bottom:20px;display:flex;align-items:center;gap:10px;font-size:13px;color:#C4B5FD"><i class="ti ti-info-circle" style="font-size:18px;flex-shrink:0"></i>Підключіть акаунти для автоматичного пошуку підписок</div>
+  <div class="section-title">Шаблони підписок</div>
+  <div class="section-sub">Оберіть популярний сервіс, щоб миттєво додати його до свого списку</div>
+  <div style="background:rgba(124,58,237,.08);border:1px solid rgba(124,58,237,.2);border-radius:var(--radius);padding:14px 18px;margin-bottom:20px;display:flex;align-items:center;gap:10px;font-size:13px;color:#C4B5FD">
+    <i class="ti ti-template" style="font-size:18px;flex-shrink:0"></i> 
+    Натисніть «Додати», щоб створити підписку з готовим шаблоном (ціна, категорія та дата вже заповнені).
+  </div>
   <div class="connect-grid" id="connectGrid"></div>
-  <div style="margin-top:24px"><div class="section-h" style="margin-bottom:14px">Останні синхронізації</div><div id="syncLog" style="display:flex;flex-direction:column;gap:8px"></div></div>
 </div>
 
 <!-- PROFILE -->
@@ -295,6 +306,7 @@
     <div class="avatar-lg" id="profileAvatar">АК</div>
     <div style="font-size:18px;font-weight:700" id="profileName">Користувач</div>
     <div style="font-size:13px;color:var(--text3);margin-top:4px" id="profileEmail">user@example.com</div>
+    <div style="margin-top:8px;font-size:12px;color:var(--text3)" id="profileMode"></div>
   </div>
   <div class="profile-card">
     <div class="form-title"><i class="ti ti-credit-card"></i> Картки для списання</div>
@@ -352,15 +364,16 @@
 <div class="sync-toast" id="syncToast"><i class="ti ti-check"></i> <span id="syncMsg">Синхронізовано!</span></div>
 
 <script>
-// ============================================================
-// КОД JAVASCRIPT (повністю ідентичний попередній версії)
-// ============================================================
 const COLORS=['#7C3AED','#06B6D4','#10B981','#F59E0B','#EF4444','#8B5CF6','#EC4899','#14B8A6'];
 const CAT_ICONS={Стрімінг:'📺',Музика:'🎵',Продуктивність:'⚡',Хмара:'☁️',Ігри:'🎮',Безпека:'🔒',Новини:'📰',ШІ:'🤖',Інше:'✨'};
+
 let state = { subscriptions: [], cards: [], connectedServices: {}, syncLog: [], theme: 'dark', currency: '₴' };
 let currentUser = null;
 let isLoginMode = true;
+let isOffline = false;           // true – працюємо з localStorage
+let isGuest = false;
 
+// --- АВТОРИЗАЦІЯ ---
 function switchAuthMode() {
     isLoginMode = !isLoginMode;
     document.getElementById('authTitle').innerText = isLoginMode ? 'Вхід до SubTrack' : 'Реєстрація в SubTrack';
@@ -376,6 +389,45 @@ function showAuthError(msg) {
     el.style.display = 'block';
 }
 
+// --- ВХІД ГОСТЯ (з підтримкою офлайн) ---
+async function guestLogin() {
+    // Спроба підключитися до сервера
+    try {
+        const res = await fetch('/api/guest', { method: 'POST' });
+        if (res.ok) {
+            const data = await res.json();
+            currentUser = data.username;
+            isOffline = false;
+            isGuest = true;
+            await loadUserData();
+            showApp();
+            return;
+        } else {
+            // Якщо сервер повернув помилку – переходимо в офлайн
+            startOfflineGuest();
+        }
+    } catch (e) {
+        // Немає з'єднання – офлайн
+        startOfflineGuest();
+    }
+}
+
+function startOfflineGuest() {
+    currentUser = 'guest_offline';
+    isOffline = true;
+    isGuest = true;
+    // Завантажуємо дані з localStorage (якщо є)
+    const saved = localStorage.getItem('subtrack_guest_offline');
+    if (saved) {
+        try { state = JSON.parse(saved); } catch(e) { state = { subscriptions: [], cards: [], connectedServices: {}, syncLog: [], theme: 'dark', currency: '₴' }; }
+    } else {
+        state = { subscriptions: [], cards: [], connectedServices: {}, syncLog: [], theme: 'dark', currency: '₴' };
+    }
+    showApp();
+    showToast('⚡ Офлайн-режим. Дані зберігаються в браузері.');
+}
+
+// --- ЗВИЧАЙНА АВТОРИЗАЦІЯ ---
 async function handleAuth() {
     const username = document.getElementById('authUsername').value.trim();
     const password = document.getElementById('authPassword').value.trim();
@@ -391,29 +443,54 @@ async function handleAuth() {
         const data = await res.json();
         if (res.ok) {
             currentUser = username;
+            isOffline = false;
+            isGuest = false;
             await loadUserData();
             showApp();
         } else {
             showAuthError(data.error || 'Помилка авторизації');
         }
-    } catch(e) { showAuthError('Помилка з\'єднання з сервером'); }
+    } catch(e) {
+        showAuthError('❌ Сервер недоступний. Переконайтесь, що він запущений.');
+    }
 }
 
 async function logoutUser() {
-    await fetch('/api/logout', { method: 'POST' });
+    if (!isOffline) {
+        await fetch('/api/logout', { method: 'POST' });
+    }
     currentUser = null;
+    isGuest = false;
+    isOffline = false;
     document.getElementById('appContainer').style.display = 'none';
     document.getElementById('authContainer').style.display = 'flex';
     document.getElementById('authPassword').value = '';
     if (!isLoginMode) switchAuthMode();
+    localStorage.removeItem('subtrack_guest_offline');
 }
 
 async function checkAuth() {
+    // Спершу перевіряємо, чи є guest_offline в localStorage (для офлайн-режиму)
+    const saved = localStorage.getItem('subtrack_guest_offline');
+    if (saved && currentUser === null) {
+        // Автоматичне відновлення офлайн-гостя при перезавантаженні
+        try {
+            state = JSON.parse(saved);
+            currentUser = 'guest_offline';
+            isOffline = true;
+            isGuest = true;
+            showApp();
+            return;
+        } catch(e) {}
+    }
+
     try {
         const res = await fetch('/api/me');
         if (res.ok) {
             const data = await res.json();
             currentUser = data.username;
+            isOffline = false;
+            isGuest = false;
             await loadUserData();
             showApp();
         } else {
@@ -429,11 +506,17 @@ async function checkAuth() {
 function showApp() {
     document.getElementById('authContainer').style.display = 'none';
     document.getElementById('appContainer').style.display = 'block';
-    const initial = currentUser.charAt(0).toUpperCase();
+    
+    // Показуємо бейдж офлайн
+    document.getElementById('offlineBadge').style.display = isOffline ? 'inline-block' : 'none';
+    
+    const initial = currentUser ? currentUser.charAt(0).toUpperCase() : 'Г';
     document.getElementById('userAvatar').innerText = initial;
     document.getElementById('profileAvatar').innerText = initial;
-    document.getElementById('profileName').innerText = currentUser;
-    document.getElementById('profileEmail').innerText = currentUser + '@subtrack.local';
+    document.getElementById('profileName').innerText = isGuest ? 'Гість' : currentUser;
+    document.getElementById('profileEmail').innerText = isGuest ? 'guest@subtrack.local' : (currentUser + '@subtrack.local');
+    document.getElementById('profileMode').innerText = isOffline ? '⚡ Офлайн-режим (дані в браузері)' : '🌐 Онлайн (сервер)';
+    
     clearForm();
     if (state.theme) setTheme(state.theme);
     if (state.currency) document.getElementById('defaultCurrency').value = state.currency;
@@ -441,7 +524,12 @@ function showApp() {
     renderDashboard();
 }
 
+// --- РОБОТА З ДАНИМИ (Онлайн / Офлайн) ---
 async function loadUserData() {
+    if (isOffline) {
+        // Дані вже завантажені з localStorage у startOfflineGuest
+        return;
+    }
     try {
         const res = await fetch('/api/data');
         if (res.ok) {
@@ -450,19 +538,31 @@ async function loadUserData() {
         } else {
             state = { subscriptions: [], cards: [], connectedServices: {}, syncLog: [], theme: 'dark', currency: '₴' };
         }
-    } catch(e) { console.error('Load data error', e); }
+    } catch(e) {
+        console.error('Load data error', e);
+        state = { subscriptions: [], cards: [], connectedServices: {}, syncLog: [], theme: 'dark', currency: '₴' };
+    }
 }
 
 async function saveState() {
+    if (isOffline) {
+        // Зберігаємо в localStorage
+        localStorage.setItem('subtrack_guest_offline', JSON.stringify(state));
+        return;
+    }
     try {
         await fetch('/api/data', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(state)
         });
-    } catch(e) { console.error('Save error', e); }
+    } catch(e) {
+        console.error('Save error', e);
+        showToast('❌ Не вдалося зберегти на сервері. Перевірте з\'єднання.');
+    }
 }
 
+// --- ІНШІ ФУНКЦІЇ (UI) ---
 function showToast(msg){
   const t=document.getElementById('syncToast');
   document.getElementById('syncMsg').textContent=msg;
@@ -479,7 +579,7 @@ function navigate(page){
   if(nav) nav.classList.add('active');
   if(page==='dashboard') renderDashboard();
   if(page==='subscriptions') renderAll();
-  if(page==='connect') renderConnect();
+  if(page==='connect') renderTemplates();
   if(page==='profile') renderProfile();
 }
 
@@ -659,56 +759,77 @@ async function deleteSub(id){
   await saveState(); renderAll(); renderDashboard(); showToast('Видалено');
 }
 
-function renderConnect(){
-  const SERVICES=[
-    {id:'netflix',name:'Netflix',icon:'🎬',color:'#E50914',desc:'Стрімінг'},
-    {id:'spotify',name:'Spotify',icon:'🎵',color:'#1DB954',desc:'Музика'},
-    {id:'youtube',name:'YouTube',icon:'▶️',color:'#FF0000',desc:'Відео'},
-    {id:'apple',name:'Apple',icon:'🍎',color:'#555',desc:'iCloud, Music'},
-    {id:'google',name:'Google One',icon:'🌐',color:'#4285F4',desc:'Хмара'},
-    {id:'amazon',name:'Amazon Prime',icon:'📦',color:'#FF9900',desc:'Доставка, Video'},
-    {id:'microsoft',name:'Microsoft 365',icon:'🪟',color:'#0078D4',desc:'Office'},
-    {id:'discord',name:'Discord Nitro',icon:'💬',color:'#5865F2',desc:'Преміум'},
-    {id:'claude',name:'Claude Pro',icon:'🤖',color:'#7C3AED',desc:'AI Anthropic'},
-    {id:'chatgpt',name:'ChatGPT Plus',icon:'💡',color:'#10A37F',desc:'OpenAI'}
+function renderTemplates(){
+  const grid = document.getElementById('connectGrid');
+  const templates = [
+    { id:'netflix', name:'Netflix', icon:'🎬', color:'#E50914', price:15.99, category:'Стрімінг' },
+    { id:'spotify', name:'Spotify', icon:'🎵', color:'#1DB954', price:9.99, category:'Музика' },
+    { id:'youtube', name:'YouTube Premium', icon:'▶️', color:'#FF0000', price:13.99, category:'Стрімінг' },
+    { id:'apple', name:'Apple Services', icon:'🍎', color:'#555', price:10.99, category:'Продуктивність' },
+    { id:'google', name:'Google One', icon:'🌐', color:'#4285F4', price:9.99, category:'Хмара' },
+    { id:'amazon', name:'Amazon Prime', icon:'📦', color:'#FF9900', price:8.99, category:'Стрімінг' },
+    { id:'microsoft', name:'Microsoft 365', icon:'🪟', color:'#0078D4', price:6.99, category:'Продуктивність' },
+    { id:'discord', name:'Discord Nitro', icon:'💬', color:'#5865F2', price:4.99, category:'Ігри' },
+    { id:'claude', name:'Claude Pro', icon:'🤖', color:'#7C3AED', price:20.00, category:'ШІ' },
+    { id:'chatgpt', name:'ChatGPT Plus', icon:'💡', color:'#10A37F', price:20.00, category:'ШІ' }
   ];
-  const grid=document.getElementById('connectGrid');
-  grid.innerHTML=SERVICES.map(svc=>{
-    const connected=!!state.connectedServices[svc.id];
-    return`<div class="connect-card"><div class="connect-icon" style="background:${svc.color}22">${svc.icon}</div><div class="connect-name">${svc.name}</div><div class="connect-desc">${svc.desc}</div><button class="connect-btn ${connected?'connected':'not-connected'}" onclick="toggleConnect('${svc.id}')">${connected?'Підключено':'Підключити'}</button></div>`;
-  }).join('');
-  const logEl=document.getElementById('syncLog');
-  if(!state.syncLog.length){logEl.innerHTML='<div style="color:var(--text3);font-size:13px">Синхронізацій ще не було</div>';return;}
-  logEl.innerHTML=state.syncLog.slice(-5).reverse().map(l=>`<div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xs);font-size:13px"><i class="ti ti-check" style="color:var(--accent3)"></i><div style="flex:1">${l.service}: знайдено ${l.found} підписок</div><div style="color:var(--text3)">${l.time}</div></div>`).join('');
+  grid.innerHTML = templates.map(t => `
+    <div class="connect-card">
+      <div class="connect-icon" style="background:${t.color}22">${t.icon}</div>
+      <div class="connect-name">${t.name}</div>
+      <div class="connect-desc">${t.category} · ${t.price} ₴/міс</div>
+      <button class="connect-btn not-connected" onclick="addTemplate('${t.id}')">Додати</button>
+    </div>
+  `).join('');
 }
 
-async function toggleConnect(id){
-  const SERVICES=[{id:'netflix',name:'Netflix'},{id:'spotify',name:'Spotify'},{id:'youtube',name:'YouTube'},{id:'apple',name:'Apple'},{id:'google',name:'Google One'},{id:'amazon',name:'Amazon Prime'},{id:'microsoft',name:'Microsoft 365'},{id:'discord',name:'Discord Nitro'},{id:'claude',name:'Claude Pro'},{id:'chatgpt',name:'ChatGPT Plus'}];
-  const svc=SERVICES.find(s=>s.id===id);
-  if(state.connectedServices[id]){
-    delete state.connectedServices[id];
-    await saveState(); renderConnect(); showToast(svc.name+' відключено');
-  }else{
-    state.connectedServices[id]=true;
-    const found=Math.floor(Math.random()*3)+1;
-    state.syncLog.push({service:svc.name,found,time:new Date().toLocaleTimeString('uk-UA')});
-    const demo=[{name:svc.name+' Basic',price:(Math.random()*200+50).toFixed(0),billing:'monthly',category:'Стрімінг'}];
-    demo.forEach(d=>{
-      if(!state.subscriptions.find(s=>s.name===d.name)){
-        const next=new Date();next.setDate(next.getDate()+Math.floor(Math.random()*28)+1);
-        state.subscriptions.push({id:Date.now().toString()+Math.random(),name:d.name,price:d.price,billing:d.billing,category:d.category,currency:'₴',date:next.toISOString().split('T')[0],card:'',note:'Автоматично додано через '+svc.name,connectedFrom:id});
-      }
-    });
-    await saveState(); renderConnect(); showToast(svc.name+' підключено!'); renderDashboard();
+async function addTemplate(id){
+  const map = {
+    netflix: {name:'Netflix', price:15.99, category:'Стрімінг'},
+    spotify: {name:'Spotify', price:9.99, category:'Музика'},
+    youtube: {name:'YouTube Premium', price:13.99, category:'Стрімінг'},
+    apple: {name:'Apple Services', price:10.99, category:'Продуктивність'},
+    google: {name:'Google One', price:9.99, category:'Хмара'},
+    amazon: {name:'Amazon Prime', price:8.99, category:'Стрімінг'},
+    microsoft: {name:'Microsoft 365', price:6.99, category:'Продуктивність'},
+    discord: {name:'Discord Nitro', price:4.99, category:'Ігри'},
+    claude: {name:'Claude Pro', price:20.00, category:'ШІ'},
+    chatgpt: {name:'ChatGPT Plus', price:20.00, category:'ШІ'}
+  };
+  const data = map[id];
+  if (!data) return;
+  if (state.subscriptions.some(s => s.name === data.name)) {
+    showToast('Цей сервіс вже є у вашому списку!');
+    return;
   }
+  const next = new Date();
+  next.setDate(next.getDate() + 1);
+  const newSub = {
+    id: Date.now().toString() + Math.random().toString(36).substr(2, 4),
+    name: data.name,
+    price: data.price,
+    date: next.toISOString().split('T')[0],
+    billing: 'monthly',
+    category: data.category,
+    currency: '₴',
+    card: '',
+    note: 'Додано з шаблону'
+  };
+  state.subscriptions.push(newSub);
+  await saveState();
+  showToast('✅ Шаблон "' + data.name + '" додано!');
+  renderDashboard();
+  renderAll();
 }
 
 document.getElementById('syncAllBtn').addEventListener('click', async ()=>{
-  const connected=Object.keys(state.connectedServices);
-  if(!connected.length){showToast('Немає підключених сервісів');return;}
-  const SERVICES=[{id:'netflix',name:'Netflix'},{id:'spotify',name:'Spotify'},{id:'youtube',name:'YouTube'},{id:'apple',name:'Apple'},{id:'google',name:'Google One'},{id:'amazon',name:'Amazon Prime'},{id:'microsoft',name:'Microsoft 365'},{id:'discord',name:'Discord Nitro'},{id:'claude',name:'Claude Pro'},{id:'chatgpt',name:'ChatGPT Plus'}];
-  connected.forEach(id=>{const svc=SERVICES.find(s=>s.id===id);const found=Math.floor(Math.random()*2)+1;state.syncLog.push({service:svc?svc.name:id,found,time:new Date().toLocaleTimeString('uk-UA')});});
-  await saveState(); showToast('Синхронізовано '+connected.length+' сервісів!'); renderDashboard();
+  if (isOffline) {
+    showToast('⚡ Офлайн-режим. Дані зберігаються локально.');
+    return;
+  }
+  await loadUserData();
+  renderDashboard();
+  showToast('Дані оновлено!');
 });
 
 function renderProfile(){
@@ -750,6 +871,7 @@ async function saveSetting(k,v){state[k]=v; await saveState();}
 function exportData(){const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='subtrack-export.json';a.click();}
 async function clearAllData(){if(confirm('Видалити всі дані?')){state.subscriptions=[];state.cards=[];state.connectedServices={};state.syncLog=[];await saveState(); renderDashboard(); showToast('Дані очищено');}}
 
+// --- СТАРТ ---
 clearForm();
 checkAuth();
 </script>

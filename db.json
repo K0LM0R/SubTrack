@@ -1,0 +1,40 @@
+{
+  "users": {
+    "guest_37c7d163": {
+      "password": "scrypt:32768:8:1$BDtZfWyBdH0myDDl$c35f2282b2d26d6cd9c7768be970bb321458ca0bf7fe226afe27306a9c274fa45cd3acf53f70b91d235c42f9af7a684c52068fc17baf79b2e77a9409e7c98e20",
+      "subscriptions": [],
+      "cards": [],
+      "connectedServices": {},
+      "syncLog": [],
+      "theme": "dark",
+      "currency": "₴"
+    },
+    "guest_f9d8710f": {
+      "password": "scrypt:32768:8:1$tZo0l8uvS1ZoaNF0$1a1ad9df0f8296d6d25c47550d3494f8b5812e29d7ae1bb1abaa3472d67a61e09b4a7fa5c2041686daad9070de9aba437b9c110f6c5dd22fd1e999b5ea54a290",
+      "subscriptions": [],
+      "cards": [],
+      "connectedServices": {},
+      "syncLog": [],
+      "theme": "dark",
+      "currency": "₴"
+    },
+    "guest_03f668d3": {
+      "password": "scrypt:32768:8:1$QxOJVatuUVrGCrFm$8b8604759d4b4d21ae0b03eb33d08536973f31af25e50a0a4502138a9e5fa8b9ddec9c53cd4b7a8f103e593e57fefd6af9137939b676472b3d0a363d8c0a8cf0",
+      "subscriptions": [],
+      "cards": [],
+      "connectedServices": {},
+      "syncLog": [],
+      "theme": "dark",
+      "currency": "₴"
+    },
+    "guest_6737df84": {
+      "password": "scrypt:32768:8:1$GvRwaSGOjYo0DPQn$c0ab3091485f21f17759f269b2913222a089d341635b81c22bb12f69de4a94ccabd283bf41a9d5900f244fc91beb5c4d7f23dc7e6414ac19c50c19caf84605c8",
+      "subscriptions": [],
+      "cards": [],
+      "connectedServices": {},
+      "syncLog": [],
+      "theme": "dark",
+      "currency": "₴"
+    }
+  }
+}
