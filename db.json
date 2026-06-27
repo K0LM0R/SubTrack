@@ -100,6 +100,58 @@
       "syncLog": [],
       "theme": "dark",
       "currency": "₴"
+    },
+    "test_user": {
+      "password": "hash",
+      "theme": "dark",
+      "currency": "₴",
+      "cards": [],
+      "connectedServices": {},
+      "syncLog": [],
+      "subscriptions": [
+        {
+          "id": "1",
+          "name": "Netflix",
+          "price": 15.99,
+          "billing": "monthly",
+          "date": "2026-07-15",
+          "category": "Стрімінг",
+          "currency": "₴",
+          "card": "",
+          "note": ""
+        },
+        {
+          "id": "2",
+          "name": "Spotify",
+          "price": 9.99,
+          "billing": "monthly",
+          "date": "2026-07-10",
+          "category": "Музика",
+          "currency": "₴",
+          "card": "",
+          "note": ""
+        },
+        {
+          "id": "3",
+          "name": "Amazon Prime",
+          "price": 8.99,
+          "billing": "yearly",
+          "date": "2026-07-01",
+          "category": "Стрімінг",
+          "currency": "₴",
+          "card": "",
+          "note": ""
+        }
+      ]
+    },
+    "empty_user": {
+      "password": "hash",
+      "theme": "dark",
+      "currency": "₴",
+      "cards": [],
+      "connectedServices": {},
+      "syncLog": [],
+      "subscriptions": []
     }
   }
 }
